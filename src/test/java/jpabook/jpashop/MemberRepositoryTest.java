@@ -21,7 +21,7 @@ public class MemberRepositoryTest {
 
     @Test
     @Transactional // 이 어노테이션 없으면 error 발생, jpa는 트랜잭션안에서 !!
-    @Rollback(value = false)
+//    @Rollback(value = false)
     public void testMember() throws Exception {
         // given
         Member member = new Member();
