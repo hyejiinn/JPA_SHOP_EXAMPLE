@@ -24,14 +24,11 @@ import static org.junit.Assert.*;
 @Transactional
 public class OrderServiceTest {
 
-    @Autowired
-    EntityManager em;
+    @Autowired EntityManager em;
 
-    @Autowired
-    OrderService orderService;
+    @Autowired OrderService orderService;
 
-    @Autowired
-    OrderRepository orderRepository;
+    @Autowired OrderRepository orderRepository;
 
     @Test
     public void 상품주문() {
@@ -52,7 +49,6 @@ public class OrderServiceTest {
         assertEquals("주문 가격은 가격 * 수량이다.", 10000 * orderCount, getOrder.getTotalPrice());
         assertEquals("주문 수량만큼 재고가 줄어야 한다.", 8, book.getStockQuantity());
     }
-
 
 
     @Test(expected = NotEnoughStockException.class)
