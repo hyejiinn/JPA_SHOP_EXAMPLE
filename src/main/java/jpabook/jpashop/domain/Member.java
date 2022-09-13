@@ -17,7 +17,7 @@ public class Member {
 
     private String name;
 
-    @Enumerated
+    @Embedded
     private Address address;
 
     // 연관관계의 주인이 아니기 때문에 여기서 값을 변경하려고 해도 변경되지 않는다~

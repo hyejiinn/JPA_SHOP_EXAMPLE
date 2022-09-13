@@ -6,11 +6,13 @@ import jpabook.jpashop.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -26,7 +28,11 @@ public class ItemController {
     }
 
     @PostMapping("/items/new")
-    public String create(BookForm form) {
+    public String create(@ModelAttribute("form") @Valid BookForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            return "items/createItemForm";
+        }
+
         Book book = new Book();
         // 지금은 setXXX으로 처리했지만.. createBook() 이런 메서드를 만들어주는 것이 더 좋은 방법!
         book.setName(form.getName());
