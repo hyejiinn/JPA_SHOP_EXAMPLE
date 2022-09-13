@@ -2,11 +2,10 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.service.MemberService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -48,6 +47,39 @@ public class MemberApiController {
         Long id = memberService.join(member);
 
         return new CreateMemberResponse(id);
+    }
+
+    /**
+     * 회원 수정 API
+     * PUT 방식은 전체 업데이트를 할 때 사용하는게 맞는것으로 부분 업데이트를 하려면 PATCH를 사용하거나
+     * POS를 사용하는 것이 REST 스타일에 맞다.
+     * @param id
+     * @param request
+     * @return
+     */
+    @PutMapping("/api/v2/members/{id}")
+    public UpdateMemberResponse updateMemberV2(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid UpdateMemberRequest request) {
+
+        // 커멘드와 쿼리를 분리하는 스타일 -> 강사님 스타일 -> 유지보수성 증대
+        // 이렇게 말고 update에서 member를 그냥 반환해도 되는데 이러면 준영속 상태? 의 값이 반환되기 때문에...
+        memberService.update(id, request.getName());
+        Member findMember = memberService.findOne(id);
+
+        return new UpdateMemberResponse(findMember.getId(), findMember.getName());
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class UpdateMemberResponse {
+        private Long id;
+        private String name;
+    }
+
+    @Data
+    static class UpdateMemberRequest {
+        private String name;
     }
 
     @Data
