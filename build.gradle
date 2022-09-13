@@ -30,6 +30,15 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 
+//	//spring security
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+//
+//	//spring security test
+//	testImplementation 'org.springframework.security:spring-security-test'
+//
+//	//thymeleaf :  spring security
+//	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
 	// junit 4 를 위해 추가
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
 		exclude group: "org.hamcrest", module: "hamcrest-core"
