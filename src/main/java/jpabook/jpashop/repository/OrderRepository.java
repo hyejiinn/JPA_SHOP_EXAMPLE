@@ -115,4 +115,11 @@ public class OrderRepository {
 
         return query.getResultList();
     }
+
+    // LAZY 로딩의 N+1 문제 해결 방법 : JPQL의 fetch join
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery("select o from Order o " +
+                " join fetch o.member m" +
+                " join fetch o.delivery d", Order.class).getResultList();
+    }
 }

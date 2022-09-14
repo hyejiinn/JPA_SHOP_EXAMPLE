@@ -53,6 +53,14 @@ public class OrderSimpleApiController {
                 .collect(toList());
     }
 
+    // 간단한 주문 조회 v3 : 엔티티를 DTO로 변환 - 패치조인 최적화
+    // 패치 조인을 사용함으로써 쿼리를 하나만 나갈 수 있도록 해결 ! 
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDto> ordersV3() {
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
+        return orders.stream().map(o -> new SimpleOrderDto(o)).collect(toList());
+    }
+
     @Data
     static class SimpleOrderDto {
         private Long orderId;
