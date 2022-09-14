@@ -8,7 +8,7 @@
         <div>
             <form th:object="${orderSearch}" class="form-inline">
                 <div class="form-group mb-2">
-                    <input type="text" th:field="*{memberName}" class="formcontrol" placeholder="회원명"/>
+                    <input type="text" th:field="*{memberName}" class="form-control" placeholder="회원명"/>
                 </div>
                 <div class="form-group mx-sm-1 mb-2">
                     <select th:field="*{orderStatus}" class="form-control">
@@ -58,13 +58,13 @@
 </div> <!-- /container -->
 </body>
 <script>
- function cancel(id) {
-     var form = document.createElement("form");
-     form.setAttribute("method", "post");
-     form.setAttribute("action", "/orders/" + id + "/cancel");
-     document.body.appendChild(form);
-     form.submit();
- }
+    function cancel(id) {
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/orders/" + id + "/cancel");
+        document.body.appendChild(form);
+        form.submit();
+    }
 
 </script>
 </html>
