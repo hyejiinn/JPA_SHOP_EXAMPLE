@@ -30,6 +30,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
+
+
+
 //	//spring security
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 //
