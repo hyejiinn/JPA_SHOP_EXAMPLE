@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jpabook.jpashop.domain.item.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class OrderItem {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_id")
+    @JsonIgnore // 양방향 관계에는 꼭 한쪽에 JsonIgnore을 걸어줘야 한다.
     private Order order;
 
     private int orderPrice; // 주문가격
