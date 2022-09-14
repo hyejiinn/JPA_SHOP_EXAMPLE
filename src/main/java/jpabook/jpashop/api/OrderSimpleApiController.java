@@ -5,6 +5,8 @@ import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,7 @@ import static java.util.stream.Collectors.*;
 public class OrderSimpleApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 
     // 간단한 주문 조회 V1:  엔티티 직접 노출 -> 완전 비추!!!
     // 엔티티를 그대로 노출하는 이 방법은 사용하면 안됨!! -> 다시 강조하기 위해 보여준 것
@@ -54,11 +57,21 @@ public class OrderSimpleApiController {
     }
 
     // 간단한 주문 조회 v3 : 엔티티를 DTO로 변환 - 패치조인 최적화
-    // 패치 조인을 사용함으로써 쿼리를 하나만 나갈 수 있도록 해결 ! 
+    // 패치 조인을 사용함으로써 쿼리를 하나만 나갈 수 있도록 해결 !
     @GetMapping("/api/v3/simple-orders")
     public List<SimpleOrderDto> ordersV3() {
         List<Order> orders = orderRepository.findAllWithMemberDelivery();
         return orders.stream().map(o -> new SimpleOrderDto(o)).collect(toList());
+    }
+
+    // 간단한 주문 조회 v4: JPA에서 DTO로 바로 조회 -> 원하는 값들만 조회할 수 있음.
+    // new 명령어를 사용해서 JPQL 결과를 DTO로 즉시 변환
+    // 근데 V3과 어느것이 더 좋다고 우열을 가리기는 힘들다.
+    // 리포지토리 재사용성이 떨어짐
+    // 성능상으로는 v4가 더 좋긴? 하다고 함 -> 트레이드오프 발생 (근데 성능차이가 그렇게 많이 나지는 않음)
+    @GetMapping("/api/v4/simple-orders")
+    public List<OrderSimpleQueryDto> ordersV4() {
+        return orderSimpleQueryRepository.findOrdersDtos();
     }
 
     @Data

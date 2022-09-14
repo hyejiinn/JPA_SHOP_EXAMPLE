@@ -1,9 +1,7 @@
 package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderStatus;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -122,4 +120,18 @@ public class OrderRepository {
                 " join fetch o.member m" +
                 " join fetch o.delivery d", Order.class).getResultList();
     }
+
+    // JPA에서 DTO로 바로 조회하는 방법 -> 원하는 데이터만 가져올 수 있다.
+    // 근데 재사용성이 적다..
+    // API 스펙이 여기에 들어와있는 셈..
+    // repository는 가급적 순수한 엔티티를 조회하는 용도로만 쓰는게 좋기 때문에 따로 OrderSimpleQueryRepository라는 리포지토리를 따로 만듦
+//    public List<OrderSimpleQueryDto> findOrdersDtos() {
+//        return em.createQuery("select new jpabook.jpashop.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) from Order o " +
+//                " join o.member m " +
+//                " join o.delivery d", OrderSimpleQueryDto.class).getResultList();
+//
+//
+//    }
+
+
 }
