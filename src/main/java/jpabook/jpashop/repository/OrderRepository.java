@@ -121,6 +121,20 @@ public class OrderRepository {
                 " join fetch o.delivery d", Order.class).getResultList();
     }
 
+    // JPA distinct 기능
+    // 1. DB SQL에 distinct 추가
+    // 2. 엔티티 중복된게 있으면 중복 제거 해서 컬렉션에 담아줌.
+    // 단점으로 페치 조인을 하면 페이징이 불가능하다..!!!! 메모리에서 페이징 처리를 해서 out of memory 날 가능성이 높다..
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d " +
+                        " join fetch o.orderItems oi " +
+                        " join fetch  oi.item i", Order.class)
+                .getResultList();
+    }
+
     // JPA에서 DTO로 바로 조회하는 방법 -> 원하는 데이터만 가져올 수 있다.
     // 근데 재사용성이 적다..
     // API 스펙이 여기에 들어와있는 셈..

@@ -7,6 +7,7 @@ import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,6 +64,20 @@ public class OrderApiController {
         return result;
     }
 
+    /**
+     * 주문 조회 v3: 엔티티를 DTO로 변환 - 페치 조인 최적화
+     * v2 버전과 코드는 보면 똑같다.
+     * 근데 패치조인으로 인해서 성능 최적화가 됐다!!
+     * 참고로 컬렉션 패치 조인은 1개만 사용해야 한다.
+     */
+    @GetMapping("/api/v3/orders")
+    public List<OrderDto> ordersV3() {
+        List<Order> orders = orderRepository.findAllWithItem();
+        return orders.stream()
+                .map(o -> new OrderDto(o))
+                .collect(Collectors.toList());
+    }
+
     @Data
     static class OrderDto {
 
@@ -73,6 +88,7 @@ public class OrderApiController {
         private Address address;
         //        private List<OrderItem> orderItems; // 엔티티를 이렇게 반환해서는 안된다. -> dto로 바꿔야한다.
         private List<OrderItemDto> orderItems;
+
         public OrderDto(Order order) {
             orderId = order.getId();
             name = order.getMember().getName();
