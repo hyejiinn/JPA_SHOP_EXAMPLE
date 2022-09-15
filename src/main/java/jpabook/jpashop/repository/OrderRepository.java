@@ -121,10 +121,21 @@ public class OrderRepository {
                 " join fetch o.delivery d", Order.class).getResultList();
     }
 
+    // XToOne 관계는 페치 조인을 하더라도 페이징이 잘 된다.
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery("select o from Order o " +
+                " join fetch o.member m" +
+                " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+
     // JPA distinct 기능
     // 1. DB SQL에 distinct 추가
     // 2. 엔티티 중복된게 있으면 중복 제거 해서 컬렉션에 담아줌.
-    // 단점으로 페치 조인을 하면 페이징이 불가능하다..!!!! 메모리에서 페이징 처리를 해서 out of memory 날 가능성이 높다..
+    // 단점으로 oneToMany에 대해서 페치 조인을 하면 페이징이 불가능하다..!!!! 메모리에서 페이징 처리를 해서 out of memory 날 가능성이 높다..
     public List<Order> findAllWithItem() {
         return em.createQuery(
                 "select distinct o from Order o" +
@@ -134,6 +145,7 @@ public class OrderRepository {
                         " join fetch  oi.item i", Order.class)
                 .getResultList();
     }
+
 
     // JPA에서 DTO로 바로 조회하는 방법 -> 원하는 데이터만 가져올 수 있다.
     // 근데 재사용성이 적다..

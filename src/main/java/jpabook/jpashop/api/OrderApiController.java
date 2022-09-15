@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -73,6 +74,23 @@ public class OrderApiController {
     @GetMapping("/api/v3/orders")
     public List<OrderDto> ordersV3() {
         List<Order> orders = orderRepository.findAllWithItem();
+        return orders.stream()
+                .map(o -> new OrderDto(o))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 주문 조회 v3.1 : 엔티티를 DTO로 변환 - 페이징 한계 돌파
+     *  1. XToOne 관계는 모두 페치조인 한다.
+     *  2. 컬렉션은 지연 로딩으로 조회한다.
+     *  3. 지연 로딩 성능 최적화를 위해 hibernate.default_batch_fetch_size 또는 @BatchSize를 적용한다.
+     */
+    @GetMapping("/api/v3.1/orders")
+    public List<OrderDto> ordersV3_page(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "100") int limit
+    ) {
+        List<Order> orders = orderRepository.findAllWithMemberDelivery(offset, limit);
         return orders.stream()
                 .map(o -> new OrderDto(o))
                 .collect(Collectors.toList());

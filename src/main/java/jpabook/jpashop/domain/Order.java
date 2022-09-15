@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.aspectj.weaver.ast.Or;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class Order {
     @JoinColumn(name = "member_id") // 외래키가 있는 쪽이 연관관계의 주인이 된다.~
     private Member member;
 
+//    @BatchSize(size = 1000) // 개별 최적화 (컬렉션은 컬렉션 필드에)
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
