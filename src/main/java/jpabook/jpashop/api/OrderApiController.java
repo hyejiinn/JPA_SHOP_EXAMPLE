@@ -86,7 +86,7 @@ public class OrderApiController {
 
     /**
      * 주문 조회 v3.1 : 엔티티를 DTO로 변환 - 페이징 한계 돌파
-     *  1. XToOne 관계는 모두 페치조인 한다.
+     *  1. XToOne 관계는 모두 페치조인 한다.-> 쿼리 수 최적화
      *  2. 컬렉션은 지연 로딩으로 조회한다.
      *  3. 지연 로딩 성능 최적화를 위해 hibernate.default_batch_fetch_size 또는 @BatchSize를 적용한다.
      */
@@ -115,7 +115,7 @@ public class OrderApiController {
     /**
      * 주문 조회 v5: JPA에서 DTO 직접 조회 - 컬렉션 조회 최적화
      * v4에서 N+1에 대한 문제가 발생
-     * @return
+     * In 절을 활용해서 메모리에 미리 조회해서 최적화
      */
     @GetMapping("/api/v5/orders")
     public List<OrderQueryDto> ordersV5() {
@@ -127,6 +127,7 @@ public class OrderApiController {
      * Query 1번에 조회할 수 있다.
      * 애플리케이션에서 분해 작업이 필요하기 때문에 추가 작업이 크다.
      * order 기준의 페이징 불가능
+     * join 결과를 그대로 조회 후 애플리케이션에서 원하는 모양으로 직접 변환
      */
     @GetMapping("/api/v6/orders")
     public List<OrderQueryDto> ordersV6() {
