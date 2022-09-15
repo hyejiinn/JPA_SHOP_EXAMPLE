@@ -40,7 +40,7 @@ public class OrderApiController {
     public List<Order> ordersV1() {
         List<Order> all = orderRepository.findAllByString(new OrderSearch());
         for (Order order : all) {
-            // 프록시 강제 초기화
+            // 프록시 강제 초기화, Hibernate5Module 때문에 없는 객체는 나타내지 않기 때문
             order.getMember().getName();
             order.getDelivery().getAddress();
             List<OrderItem> orderItems = order.getOrderItems();
@@ -99,9 +99,25 @@ public class OrderApiController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 주문 조회 v4: JPA에서 DTO 바로 조회
+     * OrderSimpleApiController에서 처럼 따로 쿼리를 만들어서 SQL 처럼 작성을해 원하는 필드만 뽑아냈다.
+     * 그런데 여기서는 OrderSimpleApiController와는 달리 컬렉션이 포함되어 있기 때문에 그에 대한 쿼리를 하나 더 작성해줬지만
+     * 여기에 대한 컬렉션 N번 조회하는 결과가 나오면서 N + 1 문제가 발생한다.
+     */
     @GetMapping("/api/v4/orders")
     public List<OrderQueryDto> ordersV4() {
         return orderQueryRepository.findOrderQueryDtos();
+    }
+
+    /**
+     * 주문 조회 v5: JPA에서 DTO 직접 조회 - 컬렉션 조회 최적화
+     * v4에서 N+1에 대한 문제가 발생
+     * @return
+     */
+    @GetMapping("/api/v5/orders")
+    public List<OrderQueryDto> ordersV5() {
+        return orderQueryRepository.findAllByDto_optimization();
     }
 
     @Data
