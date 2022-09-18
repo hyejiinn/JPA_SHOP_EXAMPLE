@@ -4,6 +4,9 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  output:
+    ansi:
+      enabled: always
 
   jpa:
     hibernate:
@@ -13,6 +16,7 @@ spring:
 #        show_sql: true -> ?? System.out?? ?????? log ? ????? ???? ???? ???? ??.
         format_sql: true
         default_batch_fetch_size: 100 # Global 적용 in query의 개수를 몇개로 할 것인가 (미래 몇개 땡겨 올것인가)
+    open-in-view: false
 
 
 logging:

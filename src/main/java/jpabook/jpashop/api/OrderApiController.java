@@ -43,6 +43,9 @@ public class OrderApiController {
         List<Order> all = orderRepository.findAllByString(new OrderSearch());
         for (Order order : all) {
             // 프록시 강제 초기화, Hibernate5Module 때문에 없는 객체는 나타내지 않기 때문
+            // 프록시는 영속성 컨텍스트에서 데이터가 있으면 영속성 컨텍스트에서 데이터를 초기화하고, 없으면 DB 조회해서 데이터 초기화하는데..
+            // OSIV 를 FALSE 하면 트랜잭션이 끝나는 순간 데이터베이스 커넥션도 끊기기 때문에 지연로딩이 불가능하다.
+            // 즉 프록시 초기화를 할 수 없다. .LazyInitializationException 발생
             order.getMember().getName();
             order.getDelivery().getAddress();
             List<OrderItem> orderItems = order.getOrderItems();
